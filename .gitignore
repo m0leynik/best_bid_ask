@@ -34,3 +34,6 @@
 # IDE
 .idea
 cmake-build-*
+*CMakeFiles*
+*Makefile*
+*cmake_install.cmake
