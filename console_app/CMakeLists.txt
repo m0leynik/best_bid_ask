@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
-project(best_bid_ask)
+project(console_app)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(best_bid_ask src/main.cpp)
+add_executable(console_app src/main.cpp)
 include_directories(../lib/include/)
 add_subdirectory(../lib build)
-target_link_libraries(best_bid_ask best_bid_ask_lib)
+target_link_libraries(console_app best_bid_ask_lib)
