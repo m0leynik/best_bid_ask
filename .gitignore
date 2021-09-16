@@ -37,3 +37,4 @@ cmake-build-*
 *CMakeFiles*
 *Makefile*
 *cmake_install.cmake
+build/
