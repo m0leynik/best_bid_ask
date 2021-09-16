@@ -12,17 +12,28 @@ public:
     {}
 };
 
-void Benchmark_BidsAsks_EvaluateBest(benchmark::State& state)
+class BestBidsAndAsksFixture :
+        public ::benchmark::Fixture
 {
-    const auto fileContents = helpers::ReadEntireFile("./huobi_global_depth.log");
-    OutputStrategyStub outputStrategyStub {};
-
-    while (state.KeepRunning()) {
-        bids_asks::EvaluateBest(fileContents, outputStrategyStub);
+public:
+    void SetUp(const ::benchmark::State& st) override
+    {
+        m_fileContents = helpers::ReadEntireFile("./huobi_global_depth.log");
     }
-}
+
+protected:
+    std::string m_fileContents {};
+    OutputStrategyStub m_outputStrategyStub {};
+};
 } // namespace
 
-BENCHMARK(Benchmark_BidsAsks_EvaluateBest)->Iterations(10);
+BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, BidsAndAsks)(benchmark::State& state)
+{
+    while (state.KeepRunning()) {
+        bids_asks::EvaluateBest(m_fileContents, m_outputStrategyStub);
+    }
+}
+
+BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, BidsAndAsks)->Iterations(100);
 
 BENCHMARK_MAIN();
