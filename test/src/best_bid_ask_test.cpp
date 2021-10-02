@@ -64,7 +64,7 @@ TEST(EvaluateBest, CorrectEvaluationFromSnapshotAndUpdate)
     OutputStrategyMock outputStrategyMock{};
 
     auto i = 0u;
-    EXPECT_CALL(outputStrategyMock, OnBestParametersEvaluated(_)).Times(2).WillRepeatedly(
+    EXPECT_CALL(outputStrategyMock, OnBestParametersEvaluated(_)).Times(Lines.size()).WillRepeatedly(
             [&](const BestParameters &bestParam) {
                 EXPECT_EQ(bestParam, Results[i]);
             }
