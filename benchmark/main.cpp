@@ -36,20 +36,22 @@ void MapBasedEvaluateBestBidsAndAsksBenchmark(
         bids_asks::EvaluateBest<map_t>(fileContents, outputStrategy);
     }
 }
+
+constexpr size_t BenchmarkIterations = 100u;
 } // namespace
 
 BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, UnorderedMap_EvaluateBestBidsAndAsks)(benchmark::State& state)
 {
     MapBasedEvaluateBestBidsAndAsksBenchmark<std::unordered_map<double, double>>(state, m_fileContents, m_outputStrategyStub);
 }
-BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, UnorderedMap_EvaluateBestBidsAndAsks)->Iterations(100);
+BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, UnorderedMap_EvaluateBestBidsAndAsks)->Iterations(BenchmarkIterations);
 
 
 BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, OrderedMap_EvaluateBestBidsAndAsks)(benchmark::State& state)
 {
     MapBasedEvaluateBestBidsAndAsksBenchmark<std::map<double, double>>(state, m_fileContents, m_outputStrategyStub);
 }
-BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, OrderedMap_EvaluateBestBidsAndAsks)->Iterations(100);
+BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, OrderedMap_EvaluateBestBidsAndAsks)->Iterations(BenchmarkIterations);
 
 
 
