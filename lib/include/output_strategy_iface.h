@@ -3,16 +3,11 @@
 
 #include <ctime>
 #include <string>
+#include <tuple>
+
+#include "best_parameters.h"
 
 namespace bids_asks {
-struct BestParameters
-{
-    double bestBidPrice {0.0};
-    double bestBidAmount {0.0};
-    double bestAskPrice {0.0};
-    double bestAskAmount {0.0};
-    uint64_t eventTime;
-};
 
 struct IOutputStrategy
 {
@@ -21,5 +16,6 @@ public:
     virtual ~IOutputStrategy() {}
 };
 } // bids_asks
+
 
 #endif //BEST_BID_ASK_LIB_OUTPUT_STRATEGY_IFACE_H

@@ -9,26 +9,21 @@ namespace bids_asks {
 // bids, asks and timestamp as a single structure, but separate
 // calls has been chosen to be more flexible in choosing order
 // book structure and taking performance into account
-struct IPayloadProcessorCallback
+class PayloadProcessorCallbackMock : public IPayloadProcessorCallback
 {
-    // <price, amount>
-    using order_t = std::pair<double, double>;
-
-    virtual void OnNewBidFromSnapshot(const order_t &bid) = 0;
-    virtual void OnNewAskFromSnapshot(const order_t &ask) = 0;
-    virtual void OnNewSnapshot(uint64_t timestamp) = 0;
-    virtual void OnNewBidFromUpdate(const order_t &bid) = 0;
-    virtual void OnNewAskFromUpdate(const order_t &ask) = 0;
-    virtual void OnNewUpdate(uint64_t timestamp) = 0;
-
-    virtual ~IPayloadProcessorCallback() {};
+public:
+    MOCK_METHOD1(OnNewBidFromSnapshot, void(const order_t &));
+    MOCK_METHOD1(OnNewAskFromSnapshot, void(const order_t &));
+    MOCK_METHOD1(OnNewSnapshot, void(uint64_t));
+    MOCK_METHOD1(OnNewBidFromUpdate, void(const order_t &));
+    MOCK_METHOD1(OnNewAskFromUpdate, void(const order_t &));
+    MOCK_METHOD1(OnNewUpdate, void(uint64_t));
 };
 
-struct IPayloadProcessor
+class PayloadProcessorMock : public IPayloadProcessor
 {
-    virtual void Process(std::string_view payload, IPayloadProcessorCallback &payloadProcessorCallback);
-
-    virtual ~IPayloadProcessor() {};
+public:
+    MOCK_METHOD2(Process, void(std::string_view, IPayloadProcessorCallback &));
 };
 } // bids_asks
 #endif //INCLUDE_PAYLOAD_PROCESSOR_MOCK_H
