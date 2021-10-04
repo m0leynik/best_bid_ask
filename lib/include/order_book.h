@@ -53,7 +53,7 @@ public:
     void OnNewAskFromSnapshot(const order_t &ask) override
     {
         const auto& [price, amount] = ask;
-        m_bids[price] = amount;
+        m_asks[price] = amount;
     }
 
     void OnNewSnapshot(uint64_t timestamp) override
