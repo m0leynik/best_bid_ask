@@ -81,6 +81,10 @@ public:
     // IOrderBook
     BestParameters GetBestParameters() const override
     {
+        if (m_bids.empty() || m_asks.empty()) {
+            throw std::runtime_error("No orders found");
+        }
+
         BestParameters bestParams {};
         bestParams.eventTime = m_timestamp;
         // TODO: (?) pass function as trait
