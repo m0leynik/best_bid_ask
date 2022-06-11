@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16)
 project(best_bid_ask)
 
 if(NOT CMAKE_BUILD_TYPE)
