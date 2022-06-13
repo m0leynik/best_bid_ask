@@ -4,6 +4,10 @@ include(../cmake/google_benchmark.cmake)
 
 include_directories(../lib/include/)
 
+if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DNDEBUG)
+endif()
+
 if (NOT TARGET best_bid_ask_lib)
     add_subdirectory(../lib build)
 endif()
