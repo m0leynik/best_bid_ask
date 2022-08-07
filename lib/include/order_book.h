@@ -7,6 +7,7 @@
 #include <payload_processor_iface.h>
 
 #include <helpers.h>
+#include <orders_helpers.h>
 
 namespace bids_asks {
 namespace {
