@@ -38,7 +38,6 @@ class OrderBookActualizer final
 public:
     OrderBookActualizer()
     {
-        constexpr size_t MaxOrders = 20u;
         helpers::PreallocateContainer(m_bids, MaxOrders);
         helpers::PreallocateContainer(m_asks, MaxOrders);
     }

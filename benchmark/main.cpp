@@ -3,6 +3,10 @@
 #include "bids_asks.h"
 #include "helpers.h"
 
+#define CONCAT(a, b) CONCAT_INNER(a, b)
+#define CONCAT_INNER(a, b) a ## b
+
+
 namespace {
 class OutputStrategyStub final :
         public bids_asks::IOutputStrategy
@@ -37,22 +41,30 @@ void MapBasedEvaluateBestBidsAndAsksBenchmark(
     }
 }
 
-constexpr size_t BenchmarkIterations = 100u;
+constexpr size_t BenchmarkIterations = 20u;
 } // namespace
 
-BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, UnorderedMap_EvaluateBestBidsAndAsks)(benchmark::State& state)
-{
-    MapBasedEvaluateBestBidsAndAsksBenchmark<std::unordered_map<double, double>>(state, m_fileContents, m_outputStrategyStub);
-}
-BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, UnorderedMap_EvaluateBestBidsAndAsks)->Iterations(BenchmarkIterations);
+#define MAP_BASED_BENCHMARK_SPECIFIC(map_t, benchmark_name) \
+    BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, benchmark_name)(benchmark::State& state)\
+    {\
+        MapBasedEvaluateBestBidsAndAsksBenchmark<map_t>(state, m_fileContents, m_outputStrategyStub);\
+    }\
+    BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, benchmark_name)->Iterations(BenchmarkIterations)
 
 
-BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, OrderedMap_EvaluateBestBidsAndAsks)(benchmark::State& state)
-{
-    MapBasedEvaluateBestBidsAndAsksBenchmark<std::map<double, double>>(state, m_fileContents, m_outputStrategyStub);
-}
-BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, OrderedMap_EvaluateBestBidsAndAsks)->Iterations(BenchmarkIterations);
+#define MAP_BASED_BENCHMARK(map_t, benchmark_name)\ 
+    typedef map_t<double, double> CONCAT(specific_map_t, __LINE__);\
+    MAP_BASED_BENCHMARK_SPECIFIC(CONCAT(specific_map_t, __LINE__), benchmark_name)
 
+// unordered_map
+MAP_BASED_BENCHMARK(std::unordered_map, UnorderedMap_EvaluateBestBidsAndAsks);
+// map
+MAP_BASED_BENCHMARK(std::map, OrderedMap_EvaluateBestBidsAndAsks);
+// flat_map
+MAP_BASED_BENCHMARK(boost::container::flat_map, BoostFlatMap_EvaluateBestBidsAndAsks);
+// small_flat_map
+typedef boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders> small_flat_map_order_book_t;
+MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map_order_book_t, BoostSmallFlatMap_EvaluateBestBidsAndAsks);
 
 
 BENCHMARK_MAIN();

@@ -7,8 +7,9 @@ namespace bids_asks {
 struct IOrderBook
 {
     virtual BestParameters GetBestParameters() const = 0;
-
     virtual ~IOrderBook() {};
+
+    constexpr static size_t MaxOrders = 20u;
 };
 
 } // bids_asks

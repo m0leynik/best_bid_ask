@@ -16,7 +16,7 @@ void EvaluateBest(
 
 void EvaluateBest(std::string_view inputFile, std::string_view outputFile);
 
-template <typename container_t = std::unordered_map<double, double>>
+template <typename container_t = boost::container::flat_map<double, double>>
 void EvaluateBest(std::string_view fileContents, IOutputStrategy &outputStrategy)
 {
     const auto orderBook = std::make_shared<OrderBookActualizer<container_t>>();
