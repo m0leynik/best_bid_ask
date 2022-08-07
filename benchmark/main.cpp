@@ -22,7 +22,7 @@ class BestBidsAndAsksFixture :
 public:
     void SetUp(const ::benchmark::State& /*st*/) override
     {
-        m_fileContents = helpers::ReadEntireFile("./huobi_global_depth.log");
+        m_fileContents = helpers::ReadEntireFile("./test/data/depth_of_market.log");
     }
 
 protected:
@@ -41,7 +41,7 @@ void MapBasedEvaluateBestBidsAndAsksBenchmark(
     }
 }
 
-constexpr size_t BenchmarkIterations = 20u;
+constexpr size_t BenchmarkIterations = 100u;
 } // namespace
 
 #define MAP_BASED_BENCHMARK_SPECIFIC(map_t, benchmark_name) \
@@ -52,7 +52,7 @@ constexpr size_t BenchmarkIterations = 20u;
     BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, benchmark_name)->Iterations(BenchmarkIterations)
 
 
-#define MAP_BASED_BENCHMARK(map_t, benchmark_name)\ 
+#define MAP_BASED_BENCHMARK(map_t, benchmark_name)\
     typedef map_t<double, double> CONCAT(specific_map_t, __LINE__);\
     MAP_BASED_BENCHMARK_SPECIFIC(CONCAT(specific_map_t, __LINE__), benchmark_name)
 

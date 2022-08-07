@@ -57,7 +57,6 @@ auto GetGreatestPricedOrder(const boost::container::small_flat_map<T, T, bids_as
     return GetGreatestPricedOrderFromOrderedContainer(container);
 }
 
-
 template <typename T>
 auto GetSmallestPricedOrder(const boost::container::flat_map<T, T> &container)
 {
