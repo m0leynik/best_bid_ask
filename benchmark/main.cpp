@@ -3,8 +3,8 @@
 #include "bids_asks.h"
 #include "helpers.h"
 
-#define CONCAT(a, b) CONCAT_INNER(a, b)
-#define CONCAT_INNER(a, b) a ## b
+#define CONCATINATE(a, b) CONCATINATE_IMPL(a, b)
+#define CONCATINATE_IMPL(a, b) a ## b
 
 
 namespace {
@@ -53,8 +53,8 @@ constexpr size_t BenchmarkIterations = 100u;
 
 
 #define MAP_BASED_BENCHMARK(map_t, benchmark_name)\
-    typedef map_t<double, double> CONCAT(specific_map_t, __LINE__);\
-    MAP_BASED_BENCHMARK_SPECIFIC(CONCAT(specific_map_t, __LINE__), benchmark_name)
+    typedef map_t<double, double> CONCATINATE(specific_map_t, __LINE__);\
+    MAP_BASED_BENCHMARK_SPECIFIC(CONCATINATE(specific_map_t, __LINE__), benchmark_name)
 
 // unordered_map
 MAP_BASED_BENCHMARK(std::unordered_map, UnorderedMap_EvaluateBestBidsAndAsks);
