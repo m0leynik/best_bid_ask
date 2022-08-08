@@ -34,25 +34,46 @@ constexpr auto* UpdateLine =
         "[11665.44, 0.008088], [11665.41, 0.14], [11665.21, 0.008088], [11665.15, 0.01]]}";
 }
 
-TEST(EvaluateBest, CorrectEvaluationFromSnapshot)
+template <typename map_t>
+void CheckCorrectEvaluationFromSnapshot()
 {
     OutputStrategyMock outputStrategyMock{};
-    const BestParameters expectedResult {11666.14, 6.731865, 11666.15, 0.333936, 1598210366838325};
+    const BestParameters expectedResult { 11666.14, 6.731865, 11666.15, 0.333936, 1598210366838325 };
 
     EXPECT_CALL(outputStrategyMock, OnBestParametersEvaluated(_)).WillOnce(
             [&](const BestParameters& bestParam){
                 EXPECT_EQ(bestParam, expectedResult);
             }
     );
-    EvaluateBest(test_data::SnapshotLine, outputStrategyMock);
+    EvaluateBest<map_t>(test_data::SnapshotLine, outputStrategyMock);
 }
 
-TEST(EvaluateBest, CorrectEvaluationFromSnapshotAndUpdate)
+template <typename... T>
+void expand(auto...) {}
+
+template <typename... map_t>
+void CheckCorrectEvaluationFromSnapshotGeneric()
+{
+    expand((CheckCorrectEvaluationFromSnapshot<map_t>(), 0)...);
+}
+
+TEST(EvaluateBest, CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshotGeneric<
+        std::map<double, double>,
+        std::unordered_map<double, double>,
+        boost::container::flat_map<double, double>,
+        boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>
+    >();
+}
+
+template <typename map_t>
+void CheckCorrectEvaluationFromSnapshotAndUpdate()
 {
     constexpr std::array<const char *, 2> Lines = { test_data::SnapshotLine, test_data::UpdateLine };
     constexpr std::array<BestParameters, 2> Results = {
-        BestParameters{11666.14, 6.731865, 11666.15, 0.333936, 1598210366838325},
-        BestParameters{ 11665.91, 0.008087, 11666.39, 0.139009, 1598210366838326}
+        BestParameters { 11666.14, 6.731865, 11666.15, 0.333936, 1598210366838325 },
+        BestParameters { 11665.91, 0.008087, 11666.39, 0.139009, 1598210366838326 }
     };
     OutputStrategyMock outputStrategyMock{};
 
@@ -63,7 +84,22 @@ TEST(EvaluateBest, CorrectEvaluationFromSnapshotAndUpdate)
             }
     );
     for (; i < Lines.size(); ++i) {
-        EvaluateBest(Lines[i], outputStrategyMock);
+        EvaluateBest<map_t>(Lines[i], outputStrategyMock);
     }
+}
 
+template <typename... map_t>
+void CheckCorrectEvaluationFromSnapshotAndUpdateGeneric()
+{
+    expand((CheckCorrectEvaluationFromSnapshotAndUpdate<map_t>(), 0)...);
+}
+
+TEST(EvaluateBest, CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdateGeneric<
+        std::map<double, double>,
+        std::unordered_map<double, double>,
+        boost::container::flat_map<double, double>,
+        boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>
+    >();
 }
