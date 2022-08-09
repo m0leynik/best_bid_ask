@@ -30,41 +30,50 @@ protected:
     OutputStrategyStub m_outputStrategyStub {};
 };
 
-template <bids_asks::map_of_orders_t map_t>
+template <
+    bids_asks::map_of_orders_t map_t, 
+    bids_asks::JsonProcessor PayloadProcessor
+>
 void MapBasedEvaluateBestBidsAndAsksBenchmark(
         benchmark::State& state,
         std::string_view fileContents,
         bids_asks::IOutputStrategy &outputStrategy)
 {
     while (state.KeepRunning()) {
-        bids_asks::EvaluateBest<map_t>(fileContents, outputStrategy);
+        bids_asks::EvaluateBestGeneric<map_t, PayloadProcessor>(fileContents, outputStrategy);
     }
 }
 
 constexpr size_t BenchmarkIterations = 100u;
+
+using small_flat_map = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
 } // namespace
 
-#define MAP_BASED_BENCHMARK_SPECIFIC(map_t, benchmark_name) \
+#define MAP_BASED_BENCHMARK_SPECIFIC(map_t, payload_processor, benchmark_name) \
     BENCHMARK_DEFINE_F(BestBidsAndAsksFixture, benchmark_name)(benchmark::State& state)\
     {\
-        MapBasedEvaluateBestBidsAndAsksBenchmark<map_t>(state, m_fileContents, m_outputStrategyStub);\
+        MapBasedEvaluateBestBidsAndAsksBenchmark<map_t, payload_processor>(state, m_fileContents, m_outputStrategyStub);\
     }\
     BENCHMARK_REGISTER_F(BestBidsAndAsksFixture, benchmark_name)->Iterations(BenchmarkIterations)
 
 
-#define MAP_BASED_BENCHMARK(map_t, benchmark_name)\
+#define MAP_BASED_BENCHMARK(map_t, payload_processor, benchmark_name)\
     using CONCATENATE(specific_map_t, __LINE__) = map_t<double, double>;\
-    MAP_BASED_BENCHMARK_SPECIFIC(CONCATENATE(specific_map_t, __LINE__), benchmark_name)
+    MAP_BASED_BENCHMARK_SPECIFIC(CONCATENATE(specific_map_t, __LINE__), payload_processor, benchmark_name)
 
-// unordered_map
-MAP_BASED_BENCHMARK(std::unordered_map, UnorderedMap_EvaluateBestBidsAndAsks);
-// map
-MAP_BASED_BENCHMARK(std::map, OrderedMap_EvaluateBestBidsAndAsks);
-// flat_map
-MAP_BASED_BENCHMARK(boost::container::flat_map, BoostFlatMap_EvaluateBestBidsAndAsks);
-// small_flat_map
-using small_flat_map_order_book_t = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
-MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map_order_book_t, BoostSmallFlatMap_EvaluateBestBidsAndAsks);
 
+
+
+// RapidJson
+MAP_BASED_BENCHMARK(std::unordered_map, bids_asks::JsonProcessor::RapidJson, UnorderedMap_RapidJson_EvaluateBest);
+MAP_BASED_BENCHMARK(std::map, bids_asks::JsonProcessor::RapidJson, OrderedMap_RapidJson_EvaluateBest);
+MAP_BASED_BENCHMARK(boost::container::flat_map, bids_asks::JsonProcessor::RapidJson, BoostFlatMap_RapidJson_EvaluateBest);
+MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map, bids_asks::JsonProcessor::RapidJson, BoostSmallFlatMap_RapidJson_EvaluateBest);
+
+// Nlohmann-Json
+MAP_BASED_BENCHMARK(std::unordered_map, bids_asks::JsonProcessor::NlohmanJson, UnorderedMap_NlohmanJson_EvaluateBest);
+MAP_BASED_BENCHMARK(std::map, bids_asks::JsonProcessor::NlohmanJson, OrderedMap_NlohmanJson_EvaluateBest);
+MAP_BASED_BENCHMARK(boost::container::flat_map, bids_asks::JsonProcessor::NlohmanJson, BoostFlatMap_NlohmanJson_EvaluateBest);
+MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map, bids_asks::JsonProcessor::NlohmanJson, BoostSmallFlatMap_NlohmanJson_EvaluateBest);
 
 BENCHMARK_MAIN();

@@ -34,7 +34,7 @@ constexpr auto* UpdateLine =
         "[11665.44, 0.008088], [11665.41, 0.14], [11665.21, 0.008088], [11665.15, 0.01]]}";
 }
 
-template <typename map_t>
+template <typename map_t, JsonProcessor jsonProcessor>
 void CheckCorrectEvaluationFromSnapshot()
 {
     OutputStrategyMock outputStrategyMock{};
@@ -45,7 +45,7 @@ void CheckCorrectEvaluationFromSnapshot()
                 EXPECT_EQ(bestParam, expectedResult);
             }
     );
-    EvaluateBest<map_t>(test_data::SnapshotLine, outputStrategyMock);
+    EvaluateBestGeneric<map_t, jsonProcessor>(test_data::SnapshotLine, outputStrategyMock);
 }
 
 template <typename... T>
@@ -54,7 +54,8 @@ void expand(auto...) {}
 template <typename... map_t>
 void CheckCorrectEvaluationFromSnapshotGeneric()
 {
-    expand((CheckCorrectEvaluationFromSnapshot<map_t>(), 0)...);
+    expand((CheckCorrectEvaluationFromSnapshot<map_t, JsonProcessor::RapidJson>(), 0)...);
+    expand((CheckCorrectEvaluationFromSnapshot<map_t, JsonProcessor::NlohmanJson>(), 0)...);
 }
 
 TEST(EvaluateBest, CorrectEvaluationFromSnapshot)
@@ -67,7 +68,7 @@ TEST(EvaluateBest, CorrectEvaluationFromSnapshot)
     >();
 }
 
-template <typename map_t>
+template <typename map_t, JsonProcessor jsonProcessor>
 void CheckCorrectEvaluationFromSnapshotAndUpdate()
 {
     constexpr std::array<const char *, 2> Lines = { test_data::SnapshotLine, test_data::UpdateLine };
@@ -84,14 +85,15 @@ void CheckCorrectEvaluationFromSnapshotAndUpdate()
             }
     );
     for (; i < Lines.size(); ++i) {
-        EvaluateBest<map_t>(Lines[i], outputStrategyMock);
+        EvaluateBestGeneric<map_t, jsonProcessor>(Lines[i], outputStrategyMock);
     }
 }
 
 template <typename... map_t>
 void CheckCorrectEvaluationFromSnapshotAndUpdateGeneric()
 {
-    expand((CheckCorrectEvaluationFromSnapshotAndUpdate<map_t>(), 0)...);
+    expand((CheckCorrectEvaluationFromSnapshotAndUpdate<map_t, JsonProcessor::RapidJson>(), 0)...);
+    expand((CheckCorrectEvaluationFromSnapshotAndUpdate<map_t, JsonProcessor::NlohmanJson>(), 0)...);
 }
 
 TEST(EvaluateBest, CorrectEvaluationFromSnapshotAndUpdate)

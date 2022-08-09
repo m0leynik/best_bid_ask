@@ -88,4 +88,10 @@ void EvaluateBest(std::string_view inputFile, std::string_view outputFile)
 
     EvaluateBest(fileContents, *outputStrategy);
 }
+
+void EvaluateBest(std::string_view fileContents, IOutputStrategy &outputStrategy)
+{
+    EvaluateBestGeneric<default_container_t, JsonProcessor::RapidJson>(fileContents, outputStrategy);
+}
+
 } // bids_asks
