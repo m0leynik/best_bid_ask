@@ -17,8 +17,13 @@ bool ShouldDeleteOrder(double amount)
     return (amount == AmountToDeleteOrder);
 }
 
-template <typename container_t>
-void UpdateOrder(const IPayloadProcessorCallback::order_t &order, container_t &orders)
+template<typename T>
+concept map_of_orders_t = std::same_as<typename T::key_type, IPayloadProcessorCallback::order_t::first_type> 
+                       && std::same_as<typename T::mapped_type, IPayloadProcessorCallback::order_t::second_type>;
+
+
+template <map_of_orders_t map_t>
+void UpdateOrder(const IPayloadProcessorCallback::order_t &order, map_t &orders)
 {
     const auto& [price, amount] = order;
 
@@ -30,8 +35,7 @@ void UpdateOrder(const IPayloadProcessorCallback::order_t &order, container_t &o
     orders[price] = amount;
 }
 }
-
-template <typename container_t>
+template <map_of_orders_t map_t>
 class OrderBookActualizer final
         : public IPayloadProcessorCallback
         , public IOrderBook
@@ -106,8 +110,8 @@ private:
     }
 
 private:
-    container_t m_bids {};
-    container_t m_asks {};
+    map_t m_bids {};
+    map_t m_asks {};
     uint64_t m_timestamp {};
 };
 

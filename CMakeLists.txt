@@ -6,7 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # to silence googlebenchmark building error
-set(CMAKE_CXX_FLAGS "-Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -fconcepts-diagnostics-depth=8")
 
 
 set(CMAKE_CXX_STANDARD 20)

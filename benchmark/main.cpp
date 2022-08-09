@@ -30,7 +30,7 @@ protected:
     OutputStrategyStub m_outputStrategyStub {};
 };
 
-template <typename map_t>
+template <bids_asks::map_of_orders_t map_t>
 void MapBasedEvaluateBestBidsAndAsksBenchmark(
         benchmark::State& state,
         std::string_view fileContents,
