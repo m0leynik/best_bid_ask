@@ -48,25 +48,48 @@ void CheckCorrectEvaluationFromSnapshot()
     EvaluateBestGeneric<map_t, jsonProcessor>(test_data::SnapshotLine, outputStrategyMock);
 }
 
-template <typename... T>
-void expand(auto...) {}
+using small_flat_map_t = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
 
-template <typename... map_t>
-void CheckCorrectEvaluationFromSnapshotGeneric()
+TEST(EvaluateBest, Map_RapidJson_CorrectEvaluationFromSnapshot)
 {
-    expand((CheckCorrectEvaluationFromSnapshot<map_t, JsonProcessor::RapidJson>(), 0)...);
-    expand((CheckCorrectEvaluationFromSnapshot<map_t, JsonProcessor::NlohmanJson>(), 0)...);
+    CheckCorrectEvaluationFromSnapshot<std::map<double, double>, JsonProcessor::RapidJson>();
 }
 
-TEST(EvaluateBest, CorrectEvaluationFromSnapshot)
+TEST(EvaluateBest, UnorderdMap_RapidJson_CorrectEvaluationFromSnapshot)
 {
-    CheckCorrectEvaluationFromSnapshotGeneric<
-        std::map<double, double>,
-        std::unordered_map<double, double>,
-        boost::container::flat_map<double, double>,
-        boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>
-    >();
+    CheckCorrectEvaluationFromSnapshot<std::unordered_map<double, double>, JsonProcessor::RapidJson>();
 }
+
+TEST(EvaluateBest, FlatMap_RapidJson_CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshot<boost::container::flat_map<double, double>, JsonProcessor::RapidJson>();
+}
+
+TEST(EvaluateBest, SmallFlatMap_RapidJson_CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshot<small_flat_map_t, JsonProcessor::RapidJson>();
+}
+
+TEST(EvaluateBest, Map_NlohmanJson_CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshot<std::map<double, double>, JsonProcessor::NlohmanJson>();
+}
+
+TEST(EvaluateBest, UnorderdMap_NlohmanJson_CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshot<std::unordered_map<double, double>, JsonProcessor::NlohmanJson>();
+}
+
+TEST(EvaluateBest, FlatMap_NlohmanJson_CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshot<boost::container::flat_map<double, double>, JsonProcessor::NlohmanJson>();
+}
+
+TEST(EvaluateBest, SmallFlatMap_NlohmanJson_CorrectEvaluationFromSnapshot)
+{
+    CheckCorrectEvaluationFromSnapshot<small_flat_map_t, JsonProcessor::NlohmanJson>();
+}
+
 
 template <typename map_t, JsonProcessor jsonProcessor>
 void CheckCorrectEvaluationFromSnapshotAndUpdate()
@@ -89,19 +112,42 @@ void CheckCorrectEvaluationFromSnapshotAndUpdate()
     }
 }
 
-template <typename... map_t>
-void CheckCorrectEvaluationFromSnapshotAndUpdateGeneric()
+TEST(EvaluateBest, Map_RapidJson_CorrectEvaluationFromSnapshotAndUpdate)
 {
-    expand((CheckCorrectEvaluationFromSnapshotAndUpdate<map_t, JsonProcessor::RapidJson>(), 0)...);
-    expand((CheckCorrectEvaluationFromSnapshotAndUpdate<map_t, JsonProcessor::NlohmanJson>(), 0)...);
+    CheckCorrectEvaluationFromSnapshotAndUpdate<std::map<double, double>, JsonProcessor::RapidJson>();
 }
 
-TEST(EvaluateBest, CorrectEvaluationFromSnapshotAndUpdate)
+TEST(EvaluateBest, UnorderedMap_RapidJson_CorrectEvaluationFromSnapshotAndUpdate)
 {
-    CheckCorrectEvaluationFromSnapshotAndUpdateGeneric<
-        std::map<double, double>,
-        std::unordered_map<double, double>,
-        boost::container::flat_map<double, double>,
-        boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>
-    >();
+    CheckCorrectEvaluationFromSnapshotAndUpdate<std::unordered_map<double, double>, JsonProcessor::RapidJson>();
+}
+
+TEST(EvaluateBest, FlatMap_RapidJson_CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdate<boost::container::flat_map<double, double>, JsonProcessor::RapidJson>();
+}
+
+TEST(EvaluateBest, SmallFlatMap_RapidJson_CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdate<small_flat_map_t, JsonProcessor::RapidJson>();
+}
+
+TEST(EvaluateBest, Map_NlohmannJson_CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdate<std::map<double, double>, JsonProcessor::NlohmanJson>();
+}
+
+TEST(EvaluateBest, UnorderedMap_NlohmanJson_CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdate<std::unordered_map<double, double>, JsonProcessor::NlohmanJson>();
+}
+
+TEST(EvaluateBest, FlatMap_NlohmanJson_CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdate<boost::container::flat_map<double, double>, JsonProcessor::NlohmanJson>();
+}
+
+TEST(EvaluateBest, SmallFlatMap_NlohmanJson_CorrectEvaluationFromSnapshotAndUpdate)
+{
+    CheckCorrectEvaluationFromSnapshotAndUpdate<small_flat_map_t, JsonProcessor::NlohmanJson>();
 }
