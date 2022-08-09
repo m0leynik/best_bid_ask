@@ -69,16 +69,12 @@ void EvaluateBest(
         const IOrderBook &orderBook,
         IOutputStrategy &outputStrategy)
 {
-    //OrderBook orderBook {};
-
     // enumerate lines
     for (const auto line : std::views::split(fileContents, '\n')) {
         outputStrategy.OnBestParametersEvaluated(
                 EvaluateBestParametersByLine(
                         SplitViewToStringView(line), payloadProcessor, orderBook));
     }
-
-    //DumpOrderBook(orderBook);
 }
 
 void EvaluateBest(std::string_view inputFile, std::string_view outputFile)
@@ -91,6 +87,8 @@ void EvaluateBest(std::string_view inputFile, std::string_view outputFile)
 
 void EvaluateBest(std::string_view fileContents, IOutputStrategy &outputStrategy)
 {
+    using default_container_t = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
+
     EvaluateBestGeneric<default_container_t, JsonProcessor::RapidJson>(fileContents, outputStrategy);
 }
 

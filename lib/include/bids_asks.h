@@ -10,8 +10,6 @@
 
 namespace bids_asks {
 
-using default_container_t = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;;
-
 enum class JsonProcessor
 {
     NlohmanJson,
