@@ -65,15 +65,15 @@ using small_flat_map = boost::container::small_flat_map<double, double, bids_ask
 
 
 // RapidJson
-MAP_BASED_BENCHMARK(std::unordered_map, bids_asks::JsonProcessor::RapidJson, UnorderedMap_RapidJson_EvaluateBest);
-MAP_BASED_BENCHMARK(std::map, bids_asks::JsonProcessor::RapidJson, OrderedMap_RapidJson_EvaluateBest);
-MAP_BASED_BENCHMARK(boost::container::flat_map, bids_asks::JsonProcessor::RapidJson, BoostFlatMap_RapidJson_EvaluateBest);
-MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map, bids_asks::JsonProcessor::RapidJson, BoostSmallFlatMap_RapidJson_EvaluateBest);
+MAP_BASED_BENCHMARK(std::unordered_map, bids_asks::JsonProcessor::RapidJson, RapidJson_UnorderedMap_EvaluateBest);
+MAP_BASED_BENCHMARK(std::map, bids_asks::JsonProcessor::RapidJson, RapidJson_OrderedMap_EvaluateBest);
+MAP_BASED_BENCHMARK(boost::container::flat_map, bids_asks::JsonProcessor::RapidJson, RapidJson_BoostFlatMap_EvaluateBest);
+MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map, bids_asks::JsonProcessor::RapidJson, RapidJson_BoostSmallFlatMap_EvaluateBest);
 
 // Nlohmann-Json
-MAP_BASED_BENCHMARK(std::unordered_map, bids_asks::JsonProcessor::NlohmanJson, UnorderedMap_NlohmanJson_EvaluateBest);
-MAP_BASED_BENCHMARK(std::map, bids_asks::JsonProcessor::NlohmanJson, OrderedMap_NlohmanJson_EvaluateBest);
-MAP_BASED_BENCHMARK(boost::container::flat_map, bids_asks::JsonProcessor::NlohmanJson, BoostFlatMap_NlohmanJson_EvaluateBest);
-MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map, bids_asks::JsonProcessor::NlohmanJson, BoostSmallFlatMap_NlohmanJson_EvaluateBest);
+MAP_BASED_BENCHMARK(std::unordered_map, bids_asks::JsonProcessor::NlohmannJson, NlohmannJson_UnorderedMap_EvaluateBest);
+MAP_BASED_BENCHMARK(std::map, bids_asks::JsonProcessor::NlohmannJson, NlohmannJson_OrderedMap_EvaluateBest);
+MAP_BASED_BENCHMARK(boost::container::flat_map, bids_asks::JsonProcessor::NlohmannJson, NlohmannJson_BoostFlatMap_EvaluateBest);
+MAP_BASED_BENCHMARK_SPECIFIC(small_flat_map, bids_asks::JsonProcessor::NlohmannJson, NlohmannJson_BoostSmallFlatMap_EvaluateBest);
 
 BENCHMARK_MAIN();
