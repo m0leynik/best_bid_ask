@@ -34,9 +34,16 @@
 # IDE
 .idea
 .vscode
+
+# CMake
 cmake-build-*
 *CMakeFiles*
 *Makefile*
 *cmake_install.cmake
+CMakeCache.txt
+test/CTestTestfile.cmake
+
+# Other
 build/
 _deps/
+compile_commands.json
