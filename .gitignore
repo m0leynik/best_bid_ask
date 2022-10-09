@@ -33,7 +33,6 @@
 
 # IDE
 .idea
-.vscode
 
 # CMake
 cmake-build-*
