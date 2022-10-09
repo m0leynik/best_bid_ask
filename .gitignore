@@ -39,3 +39,4 @@ cmake-build-*
 *Makefile*
 *cmake_install.cmake
 build/
+_deps/
