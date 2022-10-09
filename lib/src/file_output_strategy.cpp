@@ -13,7 +13,7 @@ class FileOutputStrategy final :
         public bids_asks::IOutputStrategy
 {
 public:
-    FileOutputStrategy(std::string_view outputFile) :
+    explicit FileOutputStrategy(std::string_view outputFile) :
         m_file(outputFile.data(), std::ios_base::out | std::ios_base::trunc)
     {
         m_file << std::fixed;
