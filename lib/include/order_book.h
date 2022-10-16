@@ -2,6 +2,7 @@
 #define BEST_BID_ASK_LIB_ORDER_BOOK_H
 
 #include <concepts>
+#include <iostream>
 
 #include <order_book_iface.h>
 #include <payload_processor_iface.h>
@@ -107,6 +108,23 @@ private:
     void SetTimestamp(uint64_t timestamp)
     {
         m_timestamp = timestamp;
+    }
+
+    static void PrintOrders(const map_t & orders, std::ostream &outStream)
+    {
+        for (const order_t &order : orders)
+        {
+            outStream << "[" << order.first << ", " << order.second << "]" << std::endl;
+        }
+    }
+
+    void Print(std::ostream &outStream) const
+    {
+        outStream << "Bids:" << std::endl;
+        PrintOrders(m_bids, outStream);
+
+        outStream << "Asks:" << std::endl;
+        PrintOrders(m_asks, outStream);
     }
 
 private:
