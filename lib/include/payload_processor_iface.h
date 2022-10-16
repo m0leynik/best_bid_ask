@@ -1,7 +1,8 @@
 #ifndef BEST_BID_ASK_LIB_PAYLOAD_PROCESSOR_IFACE_H
 #define BEST_BID_ASK_LIB_PAYLOAD_PROCESSOR_IFACE_H
 
-#include <utility>
+#include <string_view>
+#include <order.h>
 
 namespace bids_asks {
 
@@ -11,9 +12,6 @@ namespace bids_asks {
 // book structure and taking performance into account
 struct IPayloadProcessorCallback
 {
-    // <price, amount>
-    using order_t = std::pair<double, double>;
-
     virtual void OnNewBidFromSnapshot(const order_t &bid) = 0;
     virtual void OnNewAskFromSnapshot(const order_t &ask) = 0;
     virtual void OnNewSnapshot(uint64_t timestamp) = 0;

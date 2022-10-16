@@ -45,10 +45,11 @@ void CheckCorrectEvaluationFromSnapshot()
                 EXPECT_EQ(bestParam, expectedResult);
             }
     );
-    EvaluateBestGeneric<map_t, jsonProcessor>(test_data::SnapshotLine, outputStrategyMock);
+    using order_book_traits_t = order_book_traits<map_t>;
+    EvaluateBestGeneric<order_book_traits_t, jsonProcessor>(test_data::SnapshotLine, outputStrategyMock);
 }
 
-using small_flat_map_t = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
+using small_flat_map_t = boost::container::small_flat_map<double, double, bids_asks::MaxOrders>;
 
 TEST(EvaluateBest, RapidJson_Map_CorrectEvaluationFromSnapshot)
 {
@@ -108,7 +109,8 @@ void CheckCorrectEvaluationFromSnapshotAndUpdate()
             }
     );
     for (; i < Lines.size(); ++i) {
-        EvaluateBestGeneric<map_t, jsonProcessor>(Lines[i], outputStrategyMock);
+        using order_book_traits_t = order_book_traits<map_t>;
+        EvaluateBestGeneric<order_book_traits_t, jsonProcessor>(Lines[i], outputStrategyMock);
     }
 }
 

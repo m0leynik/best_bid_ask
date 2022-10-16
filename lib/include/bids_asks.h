@@ -40,12 +40,14 @@ std::unique_ptr<IPayloadProcessor> CreateJsonProcessor(std::shared_ptr<IPayloadP
     }
 }
 
-template <typename container_t, JsonProcessor jsonProcessor>
+template <typename order_book_traits_t, JsonProcessor jsonProcessor>
 void EvaluateBestGeneric(
     std::string_view fileContents, 
     IOutputStrategy &outputStrategy)
 {
-    const auto orderBook = std::make_shared<OrderBookActualizer<container_t>>();
+    const auto orderBook = std::make_shared<
+        OrderBookActualizer<order_book_traits_t>
+    >();
     std::unique_ptr<IPayloadProcessor> payloadProcessor = CreateJsonProcessor<jsonProcessor>(orderBook);
 
     EvaluateBest(fileContents, *payloadProcessor, *orderBook, outputStrategy);

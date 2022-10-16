@@ -3,6 +3,7 @@
 #include <map>
 #include <ranges>
 #include <stdexcept>
+#include <string>
 
 #include <nlohmann/json.hpp>
 
@@ -87,9 +88,10 @@ void EvaluateBest(std::string_view inputFile, std::string_view outputFile)
 
 void EvaluateBest(std::string_view fileContents, IOutputStrategy &outputStrategy)
 {
-    using default_container_t = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
+    using default_container_t = boost::container::small_flat_map<double, double, bids_asks::MaxOrders>;
+    using default_order_book_traits_t = order_book_traits<default_container_t>;
 
-    EvaluateBestGeneric<default_container_t, JsonProcessor::RapidJson>(fileContents, outputStrategy);
+    EvaluateBestGeneric<default_order_book_traits_t, JsonProcessor::RapidJson>(fileContents, outputStrategy);
 }
 
 } // bids_asks

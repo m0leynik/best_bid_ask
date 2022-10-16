@@ -25,13 +25,13 @@ auto GetGreatestPricedOrderFromOrderedContainer(const container_t &container)
 }
 
 template <typename T>
-auto GetSmallestPricedOrder(const boost::container::small_flat_map<T, T, bids_asks::IOrderBook::MaxOrders> &container)
+auto GetSmallestPricedOrder(const boost::container::small_flat_map<T, T, bids_asks::MaxOrders> &container)
 {
     return GetSmallestPricedOrderFromOrderedContainer(container);
 }
 
 template <typename T>
-auto GetGreatestPricedOrder(const boost::container::small_flat_map<T, T, bids_asks::IOrderBook::MaxOrders> &container)
+auto GetGreatestPricedOrder(const boost::container::small_flat_map<T, T, bids_asks::MaxOrders> &container)
 {
     return GetGreatestPricedOrderFromOrderedContainer(container);
 }
@@ -73,5 +73,26 @@ auto GetGreatestPricedOrder(const std::unordered_map<T, T> &container)
     return std::max_element(container.cbegin(), container.cend(),
                             [](const auto& l, const auto& r) { return l.first < r.first; });
 }
+
+template <typename container_t>
+auto GetGreatestPricedOrderGeneric(const container_t &container)
+{
+    static_assert(std::is_same_v<
+        typename container_t::key_type, 
+        typename container_t::mapped_type>, "Key and mapped types should be the same");
+    
+    return GetGreatestPricedOrder(container);
+}
+
+template <typename container_t>
+auto GetSmallestPricedOrderGeneric(const container_t &container)
+{
+    static_assert(std::is_same_v<
+        typename container_t::key_type, 
+        typename container_t::mapped_type>, "Key and mapped types should be the same");
+
+    return GetSmallestPricedOrder(container);
+}
+
 } // helpers
 #endif //BEST_BID_ASK_LIB_ORDER_HELPERS_H

@@ -12,19 +12,39 @@
 
 namespace bids_asks {
 namespace {
+
+template<typename T>
+concept map_of_orders_t = std::same_as<typename T::key_type, std::remove_cv_t<order_t::first_type>> 
+                       && std::same_as<typename T::mapped_type, std::remove_cv_t<order_t::second_type>>;
+
+template <
+    map_of_orders_t _container_t
+>
+struct order_book_traits
+{
+    using container_t = _container_t;
+    
+    static 
+    const container_t::value_type& GetGreatestOrder(const container_t &container)
+    {
+        return *helpers::GetGreatestPricedOrderGeneric(container);
+    }
+    static 
+    const container_t::value_type& GetSmallestOrder(const container_t &container)
+    {
+        return *helpers::GetSmallestPricedOrderGeneric(container);
+    }
+};
+
+
 bool ShouldDeleteOrder(double amount)
 {
     constexpr double AmountToDeleteOrder = 0.0;
     return (amount == AmountToDeleteOrder);
 }
 
-template<typename T>
-concept map_of_orders_t = std::same_as<typename T::key_type, IPayloadProcessorCallback::order_t::first_type> 
-                       && std::same_as<typename T::mapped_type, IPayloadProcessorCallback::order_t::second_type>;
-
-
 template <map_of_orders_t map_t>
-void UpdateOrder(const IPayloadProcessorCallback::order_t &order, map_t &orders)
+void UpdateOrder(const order_t &order, map_t &orders)
 {
     const auto& [price, amount] = order;
 
@@ -35,12 +55,15 @@ void UpdateOrder(const IPayloadProcessorCallback::order_t &order, map_t &orders)
     // TODO: (?) use map::insert() parameter (hint) to optimize insertion
     orders[price] = amount;
 }
-}
-template <map_of_orders_t map_t>
+} // namespace
+
+template <typename order_book_traits_t>
 class OrderBookActualizer final
         : public IPayloadProcessorCallback
         , public IOrderBook
 {
+private:
+    using map_t = typename order_book_traits_t::container_t;
 public:
     OrderBookActualizer()
     {
@@ -92,14 +115,13 @@ public:
 
         BestParameters bestParams {};
         bestParams.eventTime = m_timestamp;
-        // TODO: (?) pass function as trait
-        const auto bestAsk = helpers::GetSmallestPricedOrder(m_asks);
-        bestParams.bestAskPrice = bestAsk->first;
-        bestParams.bestAskAmount = bestAsk->second;
+        const order_t &bestAsk = order_book_traits_t::GetSmallestOrder(m_asks);
+        bestParams.bestAskPrice = bestAsk.first;
+        bestParams.bestAskAmount = bestAsk.second;
 
-        const auto bestBid = helpers::GetGreatestPricedOrder(m_bids);
-        bestParams.bestBidPrice = bestBid->first;
-        bestParams.bestBidAmount = bestBid->second;
+        const order_t &bestBid = order_book_traits_t::GetGreatestOrder(m_bids);
+        bestParams.bestBidPrice = bestBid.first;
+        bestParams.bestBidAmount = bestBid.second;
 
         return bestParams;
     }

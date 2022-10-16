@@ -40,13 +40,14 @@ void MapBasedEvaluateBestBidsAndAsksBenchmark(
         bids_asks::IOutputStrategy &outputStrategy)
 {
     while (state.KeepRunning()) {
-        bids_asks::EvaluateBestGeneric<map_t, PayloadProcessor>(fileContents, outputStrategy);
+        using order_book_traits_t = bids_asks::order_book_traits<map_t>;
+        bids_asks::EvaluateBestGeneric<order_book_traits_t, PayloadProcessor>(fileContents, outputStrategy);
     }
 }
 
 constexpr size_t BenchmarkIterations = 100u;
 
-using small_flat_map = boost::container::small_flat_map<double, double, bids_asks::IOrderBook::MaxOrders>;
+using small_flat_map = boost::container::small_flat_map<double, double, bids_asks::MaxOrders>;
 } // namespace
 
 #define MAP_BASED_BENCHMARK_SPECIFIC(map_t, payload_processor, benchmark_name) \
