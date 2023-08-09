@@ -5,6 +5,7 @@
 #include <boost/container/flat_map.hpp>
 #include <boost/container/small_vector.hpp>
 
+#include <algorithm>
 #include <map>
 #include <unordered_map>
 

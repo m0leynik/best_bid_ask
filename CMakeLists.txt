@@ -11,6 +11,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconcepts-diagnostics-depth=8")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 # silence rapidjson building errors
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-class-memaccess -Wno-implicit-fallthrough")
+# silence rapidjson error: std::iterator is deprecated
+add_compile_definitions(RAPIDJSON_NOMEMBERITERATORCLASS)
 # debug info
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 

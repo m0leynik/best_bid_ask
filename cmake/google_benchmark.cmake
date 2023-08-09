@@ -5,7 +5,7 @@ FetchContent_Declare(googletest
 
 FetchContent_Declare(googlebenchmark
         GIT_REPOSITORY https://github.com/google/benchmark.git
-        GIT_TAG v1.6.0) # need master for benchmark::benchmark
+        GIT_TAG v1.8.2)
 
 FetchContent_MakeAvailable(
         googletest
